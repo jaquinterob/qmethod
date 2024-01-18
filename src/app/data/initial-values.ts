@@ -17,4 +17,7 @@ export class InitialValues {
   static stepsCompleted = false;
   static failAttemptsCounter = 0;
   static punishments = 0;
+  static streak = 0;
+  static streaks = [];
+  static bestStreak = 0;
 }

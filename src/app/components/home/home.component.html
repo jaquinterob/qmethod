@@ -10,24 +10,40 @@
 
 @if (!stepsCompleted) {
 <div class="action-container">
-  <div (click)="badStep()" class="bad">😟</div>
-  <div (click)="goodStep()" class="good">🙂</div>
+  <div (click)="badStep()" class="bad action">
+    😟
+    <div class="bad-report-section">
+      <span>❌</span> {{ failAttemptsCounter }} 🚫 {{ failAttemptsCounter }}
+    </div>
+  </div>
+  <div (click)="goodStep()" class="good action">
+    🙂
+    <div class="good-report-section">
+      🔥{{ streak }} 🏁 {{ failAttemptsCounter }}
+    </div>
+  </div>
 </div>
 }@else {
 <div class="congrats"><span>🏆</span></div>
 <table>
   <tr>
-    <td>❌</td>
+    <td>❌=</td>
     <td>{{ failAttemptsCounter }}</td>
   </tr>
   <tr>
-    <td>🚫</td>
+    <td>🚫=</td>
     <td>{{ punishments }}</td>
   </tr>
   <tr>
-    <td>➕</td>
+    <td>➕=</td>
     <td>{{ steps.length }}</td>
+  </tr>
+  <tr>
+    <td>🔥=</td>
+    <td>{{ bestStreak }}</td>
   </tr>
 </table>
 <div (click)="reset()" class="reset">🔃</div>
 }
+
+<pre>{{ streaks | json }}</pre>

@@ -15,12 +15,16 @@ export class HomeComponent implements OnInit {
   stepsCompleted!: boolean;
   failAttemptsCounter!: number;
   punishments!: number;
+  streak!: number;
+  streaks!: number[];
+  bestStreak!: number;
 
   ngOnInit(): void {
     this.initSteps();
   }
 
   goodStep(): void {
+    this.streak++;
     const nextStep = this.getNextStep();
     nextStep.done = true;
     const indexCurrentStep = this.steps.indexOf(nextStep);
@@ -28,14 +32,8 @@ export class HomeComponent implements OnInit {
     this.setNextStep(indexCurrentStep);
   }
 
-  private initSteps(): void {
-    this.steps = JSON.parse(JSON.stringify(InitialValues.steps));
-    this.stepsCompleted = InitialValues.stepsCompleted;
-    this.failAttemptsCounter = InitialValues.failAttemptsCounter;
-    this.punishments = InitialValues.punishments;
-  }
-
   badStep(): void {
+    this.resetStreaks();
     const nextStep = this.getNextStep();
     if (nextStep.type === 'punishable') {
       this.steps.push({ done: false, isTheNext: false, type: 'punishable' });
@@ -44,10 +42,26 @@ export class HomeComponent implements OnInit {
     this.failAttemptsCounter++;
   }
 
+  private resetStreaks() {
+    this.streaks.push(this.streak);
+    this.streak = 0;
+  }
+
+  private initSteps(): void {
+    this.steps = JSON.parse(JSON.stringify(InitialValues.steps));
+    this.stepsCompleted = InitialValues.stepsCompleted;
+    this.failAttemptsCounter = InitialValues.failAttemptsCounter;
+    this.punishments = InitialValues.punishments;
+    this.streak = InitialValues.streak;
+    this.streaks = InitialValues.streaks;
+    this.bestStreak = InitialValues.bestStreak;
+  }
+
   private setNextStep(indexLastStep: number): void {
     if (indexLastStep !== this.steps.length - 1) {
       this.steps[indexLastStep + 1].isTheNext = true;
     } else {
+      this.getBestStreak()
       this.stepsCompleted = true;
     }
   }
@@ -58,5 +72,9 @@ export class HomeComponent implements OnInit {
 
   reset(): void {
     this.initSteps();
+  }
+
+  private getBestStreak() {
+    this.bestStreak = Math.max(...this.streaks);
   }
 }

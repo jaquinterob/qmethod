@@ -22,7 +22,8 @@
   gap: 30px;
   user-select: none;
 }
-.action-container > div {
+.action {
+  position: relative;
   border: 2px solid;
   font-size: 60px;
   padding: 30px;
@@ -75,4 +76,18 @@ table {
   text-align: center;
   margin-top: 30px;
   cursor: pointer;
+}
+
+.bad-report-section {
+  position: absolute;
+  top: 142px;
+  left: 1px;
+  font-size: 15px;
+}
+
+.good-report-section {
+  position: absolute;
+  top: 141px;
+  right: 10px;
+  font-size: 15px;
 }
