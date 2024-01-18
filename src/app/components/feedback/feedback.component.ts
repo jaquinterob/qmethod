@@ -27,6 +27,6 @@ export class FeedbackComponent implements OnInit {
   }
 
   private getRandomNumber(): number {
-    return Math.floor(Math.random() * 4) + 1;
+    return Math.floor(Math.random() * 5) + 1;
   }
 }
