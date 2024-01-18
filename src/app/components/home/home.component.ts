@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit {
     this.failAttemptsCounter = InitialValues.failAttemptsCounter;
     this.punishments = InitialValues.punishments;
     this.streak = InitialValues.streak;
-    this.streaks = InitialValues.streaks;
+    this.streaks = JSON.parse(JSON.stringify(InitialValues.streaks));
     this.bestStreak = InitialValues.bestStreak;
   }
 
@@ -61,7 +61,8 @@ export class HomeComponent implements OnInit {
     if (indexLastStep !== this.steps.length - 1) {
       this.steps[indexLastStep + 1].isTheNext = true;
     } else {
-      this.getBestStreak()
+      this.resetStreaks();
+      this.getBestStreak();
       this.stepsCompleted = true;
     }
   }
