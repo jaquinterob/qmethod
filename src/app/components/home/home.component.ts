@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Step } from '../../models/step';
+import { Step, ButtonPressed } from '../../models/step';
 import { CommonModule } from '@angular/common';
 import { InitialValues } from '../../data/initial-values';
+import { FeedbackComponent } from '../feedback/feedback.component';
 
 @Component({
-  selector: 'app-home',
+  selector: 'q-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FeedbackComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
@@ -19,22 +20,26 @@ export class HomeComponent implements OnInit {
   streaks!: number[];
   bestStreak!: number;
   remaining!: number;
+  showFeedback!: boolean;
+  buttonPressed!: ButtonPressed;
 
   ngOnInit(): void {
     this.initSteps();
   }
 
   goodStep(): void {
+    this.displayFeedback('good');
     this.streak++;
     const nextStep = this.getNextStep();
     nextStep.done = true;
     const indexCurrentStep = this.steps.indexOf(nextStep);
     nextStep.isTheNext = false;
     this.setNextStep(indexCurrentStep);
-    this.remainingRecalculation()
+    this.remainingRecalculation();
   }
 
   badStep(): void {
+    this.displayFeedback('bad');
     this.resetStreaks();
     const nextStep = this.getNextStep();
     if (nextStep.type === 'punishable') {
@@ -42,7 +47,7 @@ export class HomeComponent implements OnInit {
       this.punishments++;
     }
     this.failAttemptsCounter++;
-    this.remainingRecalculation()
+    this.remainingRecalculation();
   }
 
   private resetStreaks() {
@@ -59,6 +64,8 @@ export class HomeComponent implements OnInit {
     this.streaks = JSON.parse(JSON.stringify(InitialValues.streaks));
     this.bestStreak = InitialValues.bestStreak;
     this.remaining = InitialValues.remaining;
+    this.showFeedback = InitialValues.showFeedback;
+    this.buttonPressed = InitialValues.buttonPressed;
   }
 
   private setNextStep(indexLastStep: number): void {
@@ -86,5 +93,13 @@ export class HomeComponent implements OnInit {
   private remainingRecalculation(): void {
     const doneNumber = this.steps.filter((step) => step.done).length;
     this.remaining = this.steps.length - doneNumber;
+  }
+
+  private displayFeedback(button: ButtonPressed): void {
+    this.buttonPressed = button;
+    this.showFeedback = true;
+    setTimeout(() => {
+      this.showFeedback = false;
+    }, 1000);
   }
 }

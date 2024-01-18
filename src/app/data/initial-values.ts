@@ -1,4 +1,4 @@
-import { Step } from '../models/step';
+import { Step, ButtonPressed } from '../models/step';
 
 export class InitialValues {
   static steps: Step[] = [
@@ -21,4 +21,6 @@ export class InitialValues {
   static streaks = [];
   static bestStreak = 0;
   static remaining = 10;
+  static showFeedback = false;
+  static buttonPressed: ButtonPressed = '';
 }

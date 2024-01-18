@@ -5,3 +5,4 @@ export interface Step {
 }
 
 export type StepType = 'punishable' | 'innocent';
+export type ButtonPressed = 'good' | 'bad' | '';

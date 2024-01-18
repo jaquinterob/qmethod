@@ -1,53 +1,60 @@
-<div class="steps-container">
-  @for (step of steps; track $index) { @if ($index===5) {
-  <div>☢️</div>
-  }
-  <div [class]="step.type">
-    <div class="fix-icon">{{ step.done ? "➕" : "➖" }}</div>
+<div class="container">
+  <div class="steps-container">
+    @for (step of steps; track $index) { @if ($index===5) {
+    <div>☢️</div>
+    }
+    <div [class]="step.type">
+      <div class="fix-icon">{{ step.done ? "➕" : "➖" }}</div>
+    </div>
+    }
   </div>
-  }
-</div>
 
-@if (!stepsCompleted) {
-<div class="action-container">
-  <div (click)="badStep()" class="bad action">
-    😟
-    <div class="bad-report-section">
-      <span [ngClass]="{ 'bad-text': failAttemptsCounter > 3 }"
-        >❌ {{ failAttemptsCounter }}</span
-      >
-      <span [ngClass]="{ 'bad-text': punishments > 0 }">
-        🚫 {{ punishments }}</span
-      >
+  @if (!stepsCompleted) {
+  <div class="action-container">
+    <div (click)="badStep()" class="bad action">
+      😟
+      <div class="bad-report-section">
+        <span [ngClass]="{ 'bad-text': failAttemptsCounter > 3 }"
+          >❌ {{ failAttemptsCounter }}</span
+        >
+        <span [ngClass]="{ 'bad-text': punishments > 0 }">
+          🚫 {{ punishments }}</span
+        >
+      </div>
+    </div>
+    <div (click)="goodStep()" class="good action">
+      🙂
+      <div class="good-report-section">
+        🔥<span [ngClass]="{ 'good-text': streak > 3 }">{{ streak }}</span> 🏁
+        <span [ngClass]="{ 'good-text': remaining < 3 }">{{ remaining }}</span>
+      </div>
     </div>
   </div>
-  <div (click)="goodStep()" class="good action">
-    🙂
-    <div class="good-report-section">
-      🔥<span [ngClass]="{ 'good-text': streak > 3 }">{{ streak }}</span> 🏁
-      <span [ngClass]="{ 'good-text': remaining < 3 }">{{ remaining }}</span>
-    </div>
+  }@else {
+  <div class="congrats"><span>🏆</span></div>
+  <table>
+    <tr>
+      <td>❌=</td>
+      <td>{{ failAttemptsCounter }}</td>
+    </tr>
+    <tr>
+      <td>🚫=</td>
+      <td>{{ punishments }}</td>
+    </tr>
+    <tr>
+      <td>➕=</td>
+      <td>{{ steps.length }}</td>
+    </tr>
+    <tr>
+      <td>🔥=</td>
+      <td>{{ bestStreak }}</td>
+    </tr>
+  </table>
+  <div (click)="reset()" class="reset">🔃</div>
+  } @if (showFeedback) {
+
+  <div class="feedback-container">
+    <q-feedback [buttonPressed]="buttonPressed"></q-feedback>
   </div>
+  }
 </div>
-}@else {
-<div class="congrats"><span>🏆</span></div>
-<table>
-  <tr>
-    <td>❌=</td>
-    <td>{{ failAttemptsCounter }}</td>
-  </tr>
-  <tr>
-    <td>🚫=</td>
-    <td>{{ punishments }}</td>
-  </tr>
-  <tr>
-    <td>➕=</td>
-    <td>{{ steps.length }}</td>
-  </tr>
-  <tr>
-    <td>🔥=</td>
-    <td>{{ bestStreak }}</td>
-  </tr>
-</table>
-<div (click)="reset()" class="reset">🔃</div>
-}
