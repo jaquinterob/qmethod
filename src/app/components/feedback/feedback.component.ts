@@ -21,6 +21,8 @@ export class FeedbackComponent implements OnInit {
       this.image = `./assets/success/${this.getRandomNumber()}.gif`;
     } else if (this.buttonPressed === 'bad') {
       this.image = `./assets/error/${this.getRandomNumber()}.gif`;
+    } else {
+      this.image = './assets/success.gif';
     }
   }
 

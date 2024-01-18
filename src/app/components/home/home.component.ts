@@ -28,7 +28,6 @@ export class HomeComponent implements OnInit {
   }
 
   goodStep(): void {
-    this.displayFeedback('good');
     this.streak++;
     const nextStep = this.getNextStep();
     nextStep.done = true;
@@ -36,10 +35,10 @@ export class HomeComponent implements OnInit {
     nextStep.isTheNext = false;
     this.setNextStep(indexCurrentStep);
     this.remainingRecalculation();
+    this.displayFeedback('good');
   }
 
   badStep(): void {
-    this.displayFeedback('bad');
     this.resetStreaks();
     const nextStep = this.getNextStep();
     if (nextStep.type === 'punishable') {
@@ -48,6 +47,7 @@ export class HomeComponent implements OnInit {
     }
     this.failAttemptsCounter++;
     this.remainingRecalculation();
+    this.displayFeedback('bad');
   }
 
   private resetStreaks() {
@@ -96,7 +96,7 @@ export class HomeComponent implements OnInit {
   }
 
   private displayFeedback(button: ButtonPressed): void {
-    this.buttonPressed = button;
+    this.buttonPressed = this.stepsCompleted ? '' : button;
     this.showFeedback = true;
     setTimeout(() => {
       this.showFeedback = false;
