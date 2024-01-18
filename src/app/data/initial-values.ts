@@ -20,4 +20,5 @@ export class InitialValues {
   static streak = 0;
   static streaks = [];
   static bestStreak = 0;
+  static remaining = 10;
 }

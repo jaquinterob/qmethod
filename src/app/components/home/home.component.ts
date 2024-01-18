@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   streak!: number;
   streaks!: number[];
   bestStreak!: number;
+  remaining!: number;
 
   ngOnInit(): void {
     this.initSteps();
@@ -30,6 +31,7 @@ export class HomeComponent implements OnInit {
     const indexCurrentStep = this.steps.indexOf(nextStep);
     nextStep.isTheNext = false;
     this.setNextStep(indexCurrentStep);
+    this.remainingRecalculation()
   }
 
   badStep(): void {
@@ -40,6 +42,7 @@ export class HomeComponent implements OnInit {
       this.punishments++;
     }
     this.failAttemptsCounter++;
+    this.remainingRecalculation()
   }
 
   private resetStreaks() {
@@ -55,6 +58,7 @@ export class HomeComponent implements OnInit {
     this.streak = InitialValues.streak;
     this.streaks = JSON.parse(JSON.stringify(InitialValues.streaks));
     this.bestStreak = InitialValues.bestStreak;
+    this.remaining = InitialValues.remaining;
   }
 
   private setNextStep(indexLastStep: number): void {
@@ -75,7 +79,12 @@ export class HomeComponent implements OnInit {
     this.initSteps();
   }
 
-  private getBestStreak() {
+  private getBestStreak(): void {
     this.bestStreak = Math.max(...this.streaks);
+  }
+
+  private remainingRecalculation(): void {
+    const doneNumber = this.steps.filter((step) => step.done).length;
+    this.remaining = this.steps.length - doneNumber;
   }
 }

@@ -91,3 +91,13 @@ table {
   right: 10px;
   font-size: 15px;
 }
+
+.good-text{
+  color: green;
+  font-weight: bolder;
+}
+
+.bad-text{
+  color: red;
+  font-weight: bolder;
+}

@@ -12,14 +12,14 @@
 <div class="action-container">
   <div (click)="badStep()" class="bad action">
     😟
-    <div class="bad-report-section">
+    <div [ngClass]="{'bad-text': failAttemptsCounter > 3}" class="bad-report-section">
       <span>❌</span> {{ failAttemptsCounter }} 🚫 {{ failAttemptsCounter }}
     </div>
   </div>
   <div (click)="goodStep()" class="good action">
     🙂
-    <div class="good-report-section">
-      🔥{{ streak }} 🏁 {{ failAttemptsCounter }}
+    <div  class="good-report-section">
+      🔥<span [ngClass]="{'good-text': streak > 3}">{{ streak }}</span> 🏁 <span [ngClass]="{'good-text': remaining < 3}">{{ remaining }}</span>
     </div>
   </div>
 </div>
