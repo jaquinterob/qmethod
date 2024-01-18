@@ -100,6 +100,6 @@ export class HomeComponent implements OnInit {
     this.showFeedback = true;
     setTimeout(() => {
       this.showFeedback = false;
-    }, 1000);
+    }, 2000);
   }
 }
