@@ -1,0 +1,33 @@
+<div class="steps-container">
+  @for (step of steps; track $index) { @if ($index===5) {
+  <div>☢️</div>
+  }
+  <div [class]="step.type">
+    <div class="fix-icon">{{ step.done ? "➕" : "➖" }}</div>
+  </div>
+  }
+</div>
+
+@if (!stepsCompleted) {
+<div class="action-container">
+  <div (click)="badStep()" class="bad">😟</div>
+  <div (click)="goodStep()" class="good">🙂</div>
+</div>
+}@else {
+<div class="congrats"><span>🏆</span></div>
+<table>
+  <tr>
+    <td>❌</td>
+    <td>{{ failAttemptsCounter }}</td>
+  </tr>
+  <tr>
+    <td>🚫</td>
+    <td>{{ punishments }}</td>
+  </tr>
+  <tr>
+    <td>➕</td>
+    <td>{{ steps.length }}</td>
+  </tr>
+</table>
+<div (click)="reset()" class="reset">🔃</div>
+}

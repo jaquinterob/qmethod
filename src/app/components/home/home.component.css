@@ -1,0 +1,78 @@
+.steps-container {
+  display: flex;
+  justify-content: center;
+  font-size: 22px;
+  width: auto;
+  user-select: none;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+.innocent {
+  background-color: hsl(0, 0%, 90%);
+  border-radius: 5px;
+}
+.punishable {
+  background-color: #ffd4d4;
+  border-radius: 5px;
+}
+.action-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  user-select: none;
+}
+.action-container > div {
+  border: 2px solid;
+  font-size: 60px;
+  padding: 30px;
+  justify-content: center;
+  gap: 30px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.action-container > div:active {
+  background-color: purple;
+}
+.bad {
+  background-color: red;
+}
+.good {
+  background-color: greenyellow;
+}
+.fix-icon {
+  margin-top: -1px;
+}
+.congrats {
+  font-size: 22px;
+  text-align: center;
+  padding: 12px 0px;
+}
+.congrats > span {
+  font-size: 200px;
+  user-select: none;
+}
+
+.attempts {
+  font-size: larger;
+  font-family: monospace;
+}
+
+table {
+  font-family: monospace;
+  font-size: 30px;
+  padding: 10px 20px;
+  background-color: #dad7df;
+  margin: auto;
+  margin-top: 30px;
+  border-radius: 10px;
+  user-select: none;
+}
+
+.reset {
+  user-select: none;
+  font-size: 50px;
+  text-align: center;
+  margin-top: 30px;
+  cursor: pointer;
+}
