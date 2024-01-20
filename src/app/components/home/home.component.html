@@ -1,4 +1,4 @@
-<div class="container">
+<div [ngClass]="{ red: showFire }" class="container">
   <div class="steps-container">
     @for (step of steps; track $index) { @if ($index===5) {
     <div>☢️</div>
@@ -56,5 +56,10 @@
   <div class="feedback-container">
     <q-feedback [buttonPressed]="buttonPressed"></q-feedback>
   </div>
+  } @if (showFire) {
+  <div class="image">
+    <img src="./assets/fire.gif" alt="" srcset="" />
+  </div>
+
   }
 </div>

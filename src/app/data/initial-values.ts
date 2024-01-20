@@ -23,4 +23,5 @@ export class InitialValues {
   static remaining = 10;
   static showFeedback = false;
   static buttonPressed: ButtonPressed = '';
+  static showFire = false;
 }

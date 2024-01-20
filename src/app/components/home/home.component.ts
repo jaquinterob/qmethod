@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
   remaining!: number;
   showFeedback!: boolean;
   buttonPressed!: ButtonPressed;
+  showFire!: Boolean;
 
   ngOnInit(): void {
     this.initSteps();
@@ -36,6 +37,7 @@ export class HomeComponent implements OnInit {
     this.setNextStep(indexCurrentStep);
     this.remainingRecalculation();
     this.displayFeedback('good');
+    this.calculateShowFire();
   }
 
   badStep(): void {
@@ -66,6 +68,7 @@ export class HomeComponent implements OnInit {
     this.remaining = InitialValues.remaining;
     this.showFeedback = InitialValues.showFeedback;
     this.buttonPressed = InitialValues.buttonPressed;
+    this.showFire = InitialValues.showFire;
   }
 
   private setNextStep(indexLastStep: number): void {
@@ -75,6 +78,7 @@ export class HomeComponent implements OnInit {
       this.resetStreaks();
       this.getBestStreak();
       this.stepsCompleted = true;
+      this.showFire = false;
     }
   }
 
@@ -101,5 +105,14 @@ export class HomeComponent implements OnInit {
     setTimeout(() => {
       this.showFeedback = false;
     }, 2000);
+  }
+
+  private calculateShowFire(): void {
+    const stepDone = this.steps.filter((step) => step.done).length;
+    if (stepDone >= 5) {
+      setTimeout(() => {
+        this.showFire = true;
+      }, 2000);
+    }
   }
 }

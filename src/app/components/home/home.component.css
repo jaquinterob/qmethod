@@ -1,4 +1,5 @@
 .steps-container {
+  padding-top: 10px;
   display: flex;
   justify-content: center;
   font-size: 22px;
@@ -92,22 +93,39 @@ table {
   font-size: 15px;
 }
 
-.good-text{
+.good-text {
   color: green;
   font-weight: bolder;
 }
 
-.bad-text{
+.bad-text {
   color: red;
   font-weight: bolder;
 }
 
-.feedback-container{
+.feedback-container {
   position: absolute;
   top: 0px;
   width: 100%;
 }
 
-.container{
+.container {
   position: relative;
+  height: 100vh;
+  width: 100%;
+}
+
+.image {
+  width: 100%;
+  position: fixed;
+  bottom: 0px;
+}
+
+img {
+  width: inherit;
+  height: 240px;
+}
+
+.red {
+  background-color: #ff2222;
 }
