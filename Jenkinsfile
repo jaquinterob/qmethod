@@ -15,8 +15,7 @@ pipeline {
         stage('Copy files') {
             steps {
                 echo 'Testing...'
-                sh 'pwd'
-                //sh 'cp dist/qmethod /var/www/html'
+                sh 'cp -r dist/qmethod /var/www/html'
             }
         }
     }
