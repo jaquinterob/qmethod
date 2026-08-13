@@ -1,8 +1,14 @@
+export type StepType = 'innocent' | 'punishable';
+export type ButtonPressed = 'good' | 'bad' | '';
+
 export interface Step {
-  isTheNext: boolean;
-  done: boolean;
   type: StepType;
+  done: boolean;
 }
 
-export type StepType = 'punishable' | 'innocent';
-export type ButtonPressed = 'good' | 'bad' | '';
+export interface GameStats {
+  failAttempts: number;
+  punishments: number;
+  totalSteps: number;
+  bestStreak: number;
+}

@@ -1,4 +1,28 @@
-.container {
+.feedback-card {
   display: flex;
-  justify-content: center;
+  animation: card-pop 280ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes card-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.feedback-card img {
+  width: 220px;
+  height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.45));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feedback-card {
+    animation: none;
+  }
 }

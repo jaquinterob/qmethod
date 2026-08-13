@@ -1,4 +1,138 @@
-* {
-  padding: 0px;
-  margin: 0px;
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/inter-latin-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('assets/fonts/inter-latin-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('assets/fonts/inter-latin-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('assets/fonts/inter-latin-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('assets/fonts/inter-latin-800.woff2') format('woff2');
+}
+
+:root {
+  --font-family:
+    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --color-bg-0: #0a0e19;
+  --color-bg-1: #101527;
+  --color-surface: rgba(255, 255, 255, 0.06);
+  --color-surface-raised: rgba(255, 255, 255, 0.09);
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-strong: rgba(255, 255, 255, 0.18);
+  --color-text: #eef2f8;
+  --color-text-muted: #97a5bd;
+
+  --color-good: #34d399;
+  --color-good-strong: #10b981;
+  --color-good-deep: #059669;
+  --color-good-soft: rgba(52, 211, 153, 0.14);
+
+  --color-bad: #fb7185;
+  --color-bad-strong: #f43f5e;
+  --color-bad-deep: #e11d48;
+  --color-bad-soft: rgba(251, 113, 133, 0.14);
+
+  --color-accent: #fbbf24;
+  --color-accent-strong: #f59e0b;
+  --color-accent-soft: rgba(251, 191, 36, 0.14);
+
+  --color-fire: #ff4d2e;
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 40px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 16px 40px -16px rgba(0, 0, 0, 0.6);
+  --shadow-glow-good: 0 0 0 1px rgba(52, 211, 153, 0.28), 0 12px 40px -12px rgba(16, 185, 129, 0.5);
+  --shadow-glow-bad: 0 0 0 1px rgba(251, 113, 133, 0.28), 0 12px 40px -12px rgba(244, 63, 94, 0.45);
+  --shadow-glow-accent:
+    0 0 0 1px rgba(251, 191, 36, 0.3), 0 12px 40px -12px rgba(245, 158, 11, 0.5);
+
+  --dur-instant: 80ms;
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 400ms;
+  --dur-slower: 600ms;
+  --dur-ambient: 2000ms;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-emphasis: cubic-bezier(0.2, 0, 0, 1);
+  --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-bg-0);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button {
+  font: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-instant: 0.01ms;
+    --dur-fast: 0.01ms;
+    --dur-base: 0.01ms;
+    --dur-slow: 0.01ms;
+    --dur-slower: 0.01ms;
+    --dur-ambient: 0.01ms;
+  }
 }

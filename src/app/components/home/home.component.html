@@ -1,65 +1,312 @@
-<div [ngClass]="{ red: showFire }" class="container">
-  <div class="steps-container">
-    @for (step of steps; track $index) { @if ($index===5) {
-    <div>☢️</div>
-    }
-    <div [class]="step.type">
-      <div class="fix-icon">{{ step.done ? "➕" : "➖" }}</div>
-    </div>
-    }
-  </div>
-
-  @if (!stepsCompleted) {
-  <div class="action-container">
-    <div (click)="badStep()" class="bad action">
-      😟
-      <div class="bad-report-section">
-        <span [ngClass]="{ 'bad-text': failAttemptsCounter > 3 }"
-          >❌ {{ failAttemptsCounter }}</span
-        >
-        <span [ngClass]="{ 'bad-text': punishments > 0 }">
-          🚫 {{ punishments }}</span
-        >
+<div class="container" [class.container--fire]="game.showFire()">
+  <main class="board" [@.disabled]="motion.reduced()" [@failShake]="game.failAttempts()">
+    <header class="board__header">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            stroke="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 2c.4 3.2-1.9 4.9-3.8 6.6C6.3 10.3 5 12.4 5 15a7 7 0 0 0 14 0c0-2.9-1.2-4.7-2.4-6-.5.9-1.1 1.5-2.1 1.6.5-2.4-.2-5-2.5-8.6Z"
+            />
+          </svg>
+        </span>
+        <div class="brand__text">
+          <h1 class="brand__title">qmethod</h1>
+          <p class="brand__subtitle">Avanza los 10 pasos sin romper la racha</p>
+        </div>
       </div>
-    </div>
-    <div (click)="goodStep()" class="good action">
-      🙂
-      <div class="good-report-section">
-        🔥<span [ngClass]="{ 'good-text': streak > 3 }">{{ streak }}</span> 🏁
-        <span [ngClass]="{ 'good-text': remaining < 3 }">{{ remaining }}</span>
+
+      <div
+        class="progress"
+        role="progressbar"
+        aria-label="Progreso del método"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        [attr.aria-valuenow]="progressPercent()"
+      >
+        <div class="progress__bar" [style.width.%]="progressPercent()"></div>
       </div>
+      <span class="progress__value" aria-hidden="true"
+        >{{ game.doneCount() }}/{{ game.totalSteps() }}</span
+      >
+
+      <button
+        class="icon-button"
+        type="button"
+        (click)="game.reset()"
+        title="Reiniciar partida"
+        aria-label="Reiniciar partida"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M3 12a9 9 0 1 0 2.6-6.3L3 8" />
+          <path d="M3 3v5h5" />
+        </svg>
+      </button>
+    </header>
+
+    <section class="steps" [@stepsAnim]="game.steps().length" aria-label="Pasos del método">
+      @for (step of game.steps(); track $index) {
+        @if ($index === game.punishableStartIndex()) {
+          <span class="steps__divider" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"
+              />
+              <path d="M12 9v4" />
+              <path d="M12 17h.01" />
+            </svg>
+          </span>
+        }
+        <span
+          [class]="'step step--' + step.type"
+          [class.step--done]="step.done"
+          [class.step--current]="$index === game.currentStepIndex()"
+          [@chipDone]="step.done ? 'done' : 'pending'"
+          aria-hidden="true"
+        >
+          @if (step.done) {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          } @else {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M5 12h14" />
+            </svg>
+          }
+        </span>
+      }
+    </section>
+
+    @if (!game.stepsCompleted()) {
+      <section class="actions">
+        <button
+          class="action action--bad action--icon-only"
+          type="button"
+          (click)="bad()"
+          aria-label="Fallé, se reinicia la racha"
+        >
+          <span class="action__icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </span>
+        </button>
+
+        <button
+          class="action action--good action--icon-only"
+          type="button"
+          (click)="good()"
+          aria-label="Avancé, paso completado"
+        >
+          <span class="action__icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </span>
+        </button>
+      </section>
+
+      <ul class="game-stats" aria-label="Estadísticas de la partida">
+        <li class="stat" [class.is-hot]="game.streak() > 3">
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            stroke="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 2c.4 3.2-1.9 4.9-3.8 6.6C6.3 10.3 5 12.4 5 15a7 7 0 0 0 14 0c0-2.9-1.2-4.7-2.4-6-.5.9-1.1 1.5-2.1 1.6.5-2.4-.2-5-2.5-8.6Z"
+            />
+          </svg>
+          <span class="stat__label">Racha</span>
+          <strong class="stat__value">{{ game.streak() }}</strong>
+        </li>
+        <li class="stat" [class.is-hot]="game.remaining() < 3">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1Z" />
+            <path d="M4 22v-7" />
+          </svg>
+          <span class="stat__label">Restan</span>
+          <strong class="stat__value">{{ game.remaining() }}</strong>
+        </li>
+      </ul>
+    } @else {
+      <section class="summary" [@fadeInUp]>
+        <span class="summary__trophy" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M8 21h8" />
+            <path d="M12 17v4" />
+            <path d="M7 4h10v6a5 5 0 0 1-10 0Z" />
+            <path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3" />
+          </svg>
+        </span>
+        <h2 class="summary__title">¡Método completado!</h2>
+        <p class="summary__hint">{{ summaryLine() }}</p>
+        <dl class="summary__stats">
+          <div class="summary__row summary__row--bad">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+            <dt>Errores</dt>
+            <dd>{{ game.failAttempts() }}</dd>
+          </div>
+          <div class="summary__row summary__row--bad">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m4.9 4.9 14.2 14.2" />
+            </svg>
+            <dt>Bloqueos</dt>
+            <dd>{{ game.punishments() }}</dd>
+          </div>
+          <div class="summary__row summary__row--good">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+            <dt>Pasos</dt>
+            <dd>{{ game.totalSteps() }}</dd>
+          </div>
+          <div class="summary__row summary__row--accent">
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              stroke="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 2c.4 3.2-1.9 4.9-3.8 6.6C6.3 10.3 5 12.4 5 15a7 7 0 0 0 14 0c0-2.9-1.2-4.7-2.4-6-.5.9-1.1 1.5-2.1 1.6.5-2.4-.2-5-2.5-8.6Z"
+              />
+            </svg>
+            <dt>Mejor racha</dt>
+            <dd>{{ game.bestStreak() }}</dd>
+          </div>
+        </dl>
+        <button class="reset" type="button" (click)="game.reset()">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path d="M3 12a9 9 0 1 0 2.6-6.3L3 8" />
+            <path d="M3 3v5h5" />
+          </svg>
+          Jugar de nuevo
+        </button>
+      </section>
+    }
+  </main>
+
+  @if (game.showFeedback()) {
+    <div class="feedback-layer" [@feedback]>
+      <q-feedback [buttonPressed]="game.buttonPressed()"></q-feedback>
     </div>
-  </div>
-  }@else {
-  <div class="congrats"><span>🏆</span></div>
-  <table>
-    <tr>
-      <td>❌=</td>
-      <td>{{ failAttemptsCounter }}</td>
-    </tr>
-    <tr>
-      <td>🚫=</td>
-      <td>{{ punishments }}</td>
-    </tr>
-    <tr>
-      <td>➕=</td>
-      <td>{{ steps.length }}</td>
-    </tr>
-    <tr>
-      <td>🔥=</td>
-      <td>{{ bestStreak }}</td>
-    </tr>
-  </table>
-  <div (click)="reset()" class="reset">🔃</div>
-  } @if (showFeedback) {
+  }
 
-  <div class="feedback-container">
-    <q-feedback [buttonPressed]="buttonPressed"></q-feedback>
-  </div>
-  } @if (showFire) {
-  <div class="image">
-    <img src="./assets/fire.gif" alt="" srcset="" />
-  </div>
+  @if (game.showFeedback() && game.buttonPressed() === 'bad') {
+    <div class="bad-flash" aria-hidden="true"></div>
+  }
 
+  @if (game.showFire()) {
+    <div class="fire" [@fire] aria-hidden="true">
+      <img src="assets/fire.gif" alt="" />
+    </div>
   }
 </div>

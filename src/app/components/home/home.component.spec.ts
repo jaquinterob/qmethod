@@ -1,24 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 import { HomeComponent } from './home.component';
-import { of } from 'rxjs';
-import { Step } from '../../models/step';
+import { GameService } from '../../core/services/game.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
-  const step: Step = {
-    isTheNext: false,
-    done: false,
-    type: 'punishable',
-  };
+  let service: GameService;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
+      providers: [provideNoopAnimations()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
+    service = TestBed.inject(GameService);
+    localStorage.clear();
+    service.reset();
     fixture.detectChanges();
   });
 
@@ -26,35 +27,79 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('goodStep() works', () => {
-    const getNextStep = spyOn<any>(component, 'getNextStep').and.returnValue(
-      step
+  it('renders one step chip per step', () => {
+    const chips = fixture.nativeElement.querySelectorAll('.step');
+    expect(chips.length).toBe(10);
+  });
+
+  it('calls game.goodAnswer() when the good action is clicked', () => {
+    spyOn(service, 'goodAnswer');
+    const button = fixture.nativeElement.querySelector('.action--good');
+
+    button.click();
+
+    expect(service.goodAnswer).toHaveBeenCalled();
+  });
+
+  it('calls game.badAnswer() when the bad action is clicked', () => {
+    spyOn(service, 'badAnswer');
+    const button = fixture.nativeElement.querySelector('.action--bad');
+
+    button.click();
+
+    expect(service.badAnswer).toHaveBeenCalled();
+  });
+
+  it('hides the actions and shows the summary when the run is completed', () => {
+    for (let i = 0; i < 10; i++) {
+      service.goodAnswer();
+    }
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.actions')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.summary')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.summary__title').textContent).toContain(
+      'Método completado'
     );
-    component.goodStep();
-    expect(getNextStep).toHaveBeenCalled();
   });
 
-  it('badStep() works', () => {
-    const getNextStep = spyOn<any>(component, 'getNextStep').and.returnValue(
-      step
+  it('celebrates a perfect run in the summary', () => {
+    for (let i = 0; i < 10; i++) {
+      service.goodAnswer();
+    }
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.summary__hint').textContent).toContain(
+      'Perfección'
     );
-    component.badStep();
-    expect(getNextStep).toHaveBeenCalled();
   });
 
-  it('private getNextStep() works', () => {
-    expect(component['getNextStep']()).toEqual({
-      done: false,
-      type: 'innocent',
-      isTheNext: true,
-    });
+  it('mocks the player when the run finished with failures', () => {
+    service.badAnswer();
+    for (let i = 0; i < 10; i++) {
+      service.goodAnswer();
+    }
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.summary__hint').textContent).toContain(
+      'perfección'
+    );
   });
 
-  it('reset() works', () => {
-    const initSteps = spyOn<any>(component,'initSteps')
-    component.reset()
-    expect(initSteps).toHaveBeenCalled()
+  it('shows the feedback overlay when a step is answered', () => {
+    service.goodAnswer();
+    fixture.detectChanges();
 
+    expect(fixture.nativeElement.querySelector('.feedback-layer')).toBeTruthy();
   });
 
+  it('restarts the game from the header button', () => {
+    service.goodAnswer();
+    const restart = fixture.nativeElement.querySelector('.icon-button');
+
+    restart.click();
+
+    expect(service.currentStepIndex()).toBe(0);
+    expect(service.doneCount()).toBe(0);
+  });
 });

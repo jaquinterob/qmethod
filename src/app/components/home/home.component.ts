@@ -1,118 +1,101 @@
-import { Component, OnInit } from '@angular/core';
-import { Step, ButtonPressed } from '../../models/step';
-import { CommonModule } from '@angular/common';
-import { InitialValues } from '../../data/initial-values';
+import { Component, computed, inject } from '@angular/core';
+import {
+  animate,
+  keyframes,
+  query,
+  stagger,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import { GameService } from '../../core/services/game.service';
+import { MotionPreference } from '../../core/services/motion-preference.service';
 import { FeedbackComponent } from '../feedback/feedback.component';
+import { DUR, EASE, T } from '../../shared/motion-tokens';
 
 @Component({
   selector: 'q-home',
   standalone: true,
-  imports: [CommonModule, FeedbackComponent],
+  imports: [FeedbackComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
+  animations: [
+    trigger('stepsAnim', [
+      transition('* => *', [
+        query(
+          ':enter',
+          [
+            style({ opacity: 0, transform: 'translateY(8px) scale(0.9)' }),
+            stagger(40, animate(T.enter, style({ opacity: 1, transform: 'none' }))),
+          ],
+          { optional: true }
+        ),
+      ]),
+    ]),
+    trigger('chipDone', [
+      transition('* => done', [
+        animate(T.bounce, style({ transform: 'scale(1.2)' })),
+        animate(`${DUR.fast} ${EASE.out}`, style({ transform: 'scale(1)' })),
+      ]),
+    ]),
+    trigger('fadeInUp', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(12px)' }),
+        animate(T.panel, style({ opacity: 1, transform: 'none' })),
+      ]),
+    ]),
+    trigger('feedback', [
+      transition(':enter', [style({ opacity: 0 }), animate(T.panel, style({ opacity: 1 }))]),
+      transition(':leave', [animate(T.exit, style({ opacity: 0 }))]),
+    ]),
+    trigger('fire', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(40px)' }),
+        animate(T.panel, style({ opacity: 1, transform: 'none' })),
+      ]),
+    ]),
+    trigger('failShake', [
+      transition('* => *', [
+        animate(
+          `${DUR.base} ${EASE.out}`,
+          keyframes([
+            style({ transform: 'translateX(-12px)' }),
+            style({ transform: 'translateX(11px)' }),
+            style({ transform: 'translateX(-8px)' }),
+            style({ transform: 'translateX(6px)' }),
+            style({ transform: 'translateX(-4px)' }),
+            style({ transform: 'translateX(3px)' }),
+            style({ transform: 'none' }),
+          ])
+        ),
+      ]),
+    ]),
+  ],
 })
-export class HomeComponent implements OnInit {
-  steps!: Step[];
-  stepsCompleted!: boolean;
-  failAttemptsCounter!: number;
-  punishments!: number;
-  streak!: number;
-  streaks!: number[];
-  bestStreak!: number;
-  remaining!: number;
-  showFeedback!: boolean;
-  buttonPressed!: ButtonPressed;
-  showFire!: Boolean;
+export class HomeComponent {
+  readonly game = inject(GameService);
+  readonly motion = inject(MotionPreference);
 
-  ngOnInit(): void {
-    this.initSteps();
-  }
+  readonly progressPercent = computed(() => Math.round(this.game.progress() * 100));
 
-  goodStep(): void {
-    this.streak++;
-    const nextStep = this.getNextStep();
-    nextStep.done = true;
-    const indexCurrentStep = this.steps.indexOf(nextStep);
-    nextStep.isTheNext = false;
-    this.setNextStep(indexCurrentStep);
-    this.remainingRecalculation();
-    this.displayFeedback('good');
-    this.calculateShowFire();
-  }
-
-  badStep(): void {
-    this.resetStreaks();
-    const nextStep = this.getNextStep();
-    if (nextStep.type === 'punishable') {
-      this.steps.push({ done: false, isTheNext: false, type: 'punishable' });
-      this.punishments++;
+  readonly summaryLine = computed(() => {
+    const errors = this.game.failAttempts();
+    const blocks = this.game.punishments();
+    if (errors === 0 && blocks === 0) {
+      return 'Perfección. Te alcanzaste a ti mismo.';
     }
-    this.failAttemptsCounter++;
-    this.remainingRecalculation();
-    this.displayFeedback('bad');
-  }
-
-  private resetStreaks() {
-    this.streaks.push(this.streak);
-    this.streak = 0;
-  }
-
-  private initSteps(): void {
-    this.steps = JSON.parse(JSON.stringify(InitialValues.steps));
-    this.stepsCompleted = InitialValues.stepsCompleted;
-    this.failAttemptsCounter = InitialValues.failAttemptsCounter;
-    this.punishments = InitialValues.punishments;
-    this.streak = InitialValues.streak;
-    this.streaks = JSON.parse(JSON.stringify(InitialValues.streaks));
-    this.bestStreak = InitialValues.bestStreak;
-    this.remaining = InitialValues.remaining;
-    this.showFeedback = InitialValues.showFeedback;
-    this.buttonPressed = InitialValues.buttonPressed;
-    this.showFire = InitialValues.showFire;
-  }
-
-  private setNextStep(indexLastStep: number): void {
-    if (indexLastStep !== this.steps.length - 1) {
-      this.steps[indexLastStep + 1].isTheNext = true;
-    } else {
-      this.resetStreaks();
-      this.getBestStreak();
-      this.stepsCompleted = true;
-      this.showFire = false;
+    const faults = errors + blocks;
+    if (faults === 1) {
+      return 'Lo lograste, pero la perfección no.';
     }
+    return `Lo lograste con ${faults} fallos. La perfección te esquiva.`;
+  });
+
+  good(): void {
+    this.game.goodAnswer();
   }
 
-  private getNextStep(): Step {
-    return this.steps.filter((step) => step.isTheNext)[0];
-  }
-
-  reset(): void {
-    this.initSteps();
-  }
-
-  private getBestStreak(): void {
-    this.bestStreak = Math.max(...this.streaks);
-  }
-
-  private remainingRecalculation(): void {
-    const doneNumber = this.steps.filter((step) => step.done).length;
-    this.remaining = this.steps.length - doneNumber;
-  }
-
-  private displayFeedback(button: ButtonPressed): void {
-    this.buttonPressed = this.stepsCompleted ? '' : button;
-    this.showFeedback = true;
-    setTimeout(() => {
-      this.showFeedback = false;
-    }, 2000);
-  }
-
-  private calculateShowFire(): void {
-    const stepDone = this.steps.filter((step) => step.done).length;
-    if (stepDone >= 5) {
-      setTimeout(() => {
-        this.showFire = true;
-      }, 2000);
-    }
+  bad(): void {
+    this.game.badAnswer();
   }
 }
