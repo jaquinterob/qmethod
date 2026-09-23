@@ -136,3 +136,39 @@ button {
     --dur-ambient: 0.01ms;
   }
 }
+
+/* ── Light theme ── */
+.light {
+  --color-bg-0: #f5f6fa;
+  --color-bg-1: #ebedf5;
+  --color-surface: rgba(0, 0, 0, 0.04);
+  --color-surface-raised: rgba(0, 0, 0, 0.07);
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-border-strong: rgba(0, 0, 0, 0.18);
+  --color-text: #1a1d2e;
+  --color-text-muted: #5e6580;
+
+  --color-good: #059669;
+  --color-good-strong: #10b981;
+  --color-good-deep: #047857;
+  --color-good-soft: rgba(5, 150, 105, 0.1);
+
+  --color-bad: #e11d48;
+  --color-bad-strong: #f43f5e;
+  --color-bad-deep: #be123c;
+  --color-bad-soft: rgba(225, 29, 72, 0.08);
+
+  --color-accent: #d97706;
+  --color-accent-strong: #f59e0b;
+  --color-accent-soft: rgba(217, 119, 6, 0.1);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 16px 40px -16px rgba(0, 0, 0, 0.15);
+  --shadow-glow-good: 0 0 0 1px rgba(16, 185, 129, 0.2), 0 12px 40px -12px rgba(16, 185, 129, 0.25);
+  --shadow-glow-bad: 0 0 0 1px rgba(244, 63, 94, 0.2), 0 12px 40px -12px rgba(244, 63, 94, 0.2);
+  --shadow-glow-accent: 0 0 0 1px rgba(245, 158, 11, 0.2), 0 12px 40px -12px rgba(245, 158, 11, 0.25);
+}
+
+body {
+  transition: background-color var(--dur-slow) var(--ease-out), color var(--dur-slow) var(--ease-out);
+}

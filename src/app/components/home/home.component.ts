@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import {
   animate,
   keyframes,
@@ -76,19 +76,27 @@ export class HomeComponent {
   readonly game = inject(GameService);
   readonly motion = inject(MotionPreference);
 
+  readonly darkMode = signal(this.loadTheme());
+
+  constructor() {
+    effect(() => {
+      document.body.classList.toggle('light', !this.darkMode());
+    });
+  }
+
   readonly progressPercent = computed(() => Math.round(this.game.progress() * 100));
 
   readonly summaryLine = computed(() => {
     const errors = this.game.failAttempts();
     const blocks = this.game.punishments();
     if (errors === 0 && blocks === 0) {
-      return 'Perfección. Te alcanzaste a ti mismo.';
+      return '¡Perfecto! ¡Te superaste a ti mismo! 🌟';
     }
     const faults = errors + blocks;
     if (faults === 1) {
-      return 'Lo lograste, pero la perfección no.';
+      return '¡Lo lograste! ¡Un pequeño tropiezo no te detuvo! 💪';
     }
-    return `Lo lograste con ${faults} fallos. La perfección te esquiva.`;
+    return `¡Lo lograste con ${faults} fallos! ¡Cada intento te hace más fuerte! 🎯`;
   });
 
   good(): void {
@@ -97,5 +105,23 @@ export class HomeComponent {
 
   bad(): void {
     this.game.badAnswer();
+  }
+
+  toggleTheme(): void {
+    this.darkMode.update((v) => !v);
+    this.applyTheme();
+    localStorage.setItem('qmethod:theme', this.darkMode() ? 'dark' : 'light');
+  }
+
+  private loadTheme(): boolean {
+    const saved = localStorage.getItem('qmethod:theme');
+    if (saved) {
+      return saved === 'dark';
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  private applyTheme(): void {
+    document.body.classList.toggle('light', !this.darkMode());
   }
 }
