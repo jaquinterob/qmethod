@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription, timer } from 'rxjs';
 import { ButtonPressed, GameStats, Step } from '../../models/step';
 import { GAME_CONFIG } from '../constants/game-config';
+import { SoundService } from './sound.service';
 
 interface GameSnapshot {
   steps: Step[];
@@ -17,6 +18,7 @@ interface GameSnapshot {
 export class GameService {
   private readonly config = GAME_CONFIG;
   private readonly destroyRef = inject(DestroyRef);
+  private readonly sound = inject(SoundService);
   private readonly storageKey = 'qmethod:game';
 
   readonly steps = signal<Step[]>(this.buildInitialSteps());
@@ -66,6 +68,11 @@ export class GameService {
     this.showFeedbackFor('good');
     this.scheduleFire();
     this.persist();
+    if (this.stepsCompleted()) {
+      this.sound.playVictory();
+    } else {
+      this.sound.playGood();
+    }
   }
 
   badAnswer(): void {
@@ -78,6 +85,7 @@ export class GameService {
     this.failAttempts.update((failAttempts) => failAttempts + 1);
     this.showFeedbackFor('bad');
     this.persist();
+    this.sound.playBad();
   }
 
   reset(): void {
@@ -135,7 +143,10 @@ export class GameService {
     this.showFireTimer.unsubscribe();
     this.showFireTimer = timer(this.config.fireDelayMs)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.showFire.set(true));
+      .subscribe(() => {
+        this.showFire.set(true);
+        this.sound.playFire();
+      });
   }
 
   private buildInitialSteps(): Step[] {

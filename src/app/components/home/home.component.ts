@@ -8,8 +8,10 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import confetti from 'canvas-confetti';
 import { GameService } from '../../core/services/game.service';
 import { MotionPreference } from '../../core/services/motion-preference.service';
+import { SoundService } from '../../core/services/sound.service';
 import { FeedbackComponent } from '../feedback/feedback.component';
 import { DUR, EASE, T } from '../../shared/motion-tokens';
 
@@ -75,12 +77,20 @@ import { DUR, EASE, T } from '../../shared/motion-tokens';
 export class HomeComponent {
   readonly game = inject(GameService);
   readonly motion = inject(MotionPreference);
+  private readonly sound = inject(SoundService);
 
   readonly darkMode = signal(this.loadTheme());
+  readonly soundEnabled = this.sound.enabled;
 
   constructor() {
     effect(() => {
       document.body.classList.toggle('light', !this.darkMode());
+    });
+
+    effect(() => {
+      if (this.game.stepsCompleted() && !this.motion.reduced()) {
+        this.fireConfetti();
+      }
     });
   }
 
@@ -113,6 +123,10 @@ export class HomeComponent {
     localStorage.setItem('qmethod:theme', this.darkMode() ? 'dark' : 'light');
   }
 
+  toggleSound(): void {
+    this.sound.toggle();
+  }
+
   private loadTheme(): boolean {
     const saved = localStorage.getItem('qmethod:theme');
     if (saved) {
@@ -123,5 +137,33 @@ export class HomeComponent {
 
   private applyTheme(): void {
     document.body.classList.toggle('light', !this.darkMode());
+  }
+
+  private fireConfetti(): void {
+    const duration = 3000;
+    const end = Date.now() + duration;
+
+    const frame = () => {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.7 },
+        colors: ['#fbbf24', '#34d399', '#ffffff'],
+      });
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.7 },
+        colors: ['#fbbf24', '#34d399', '#ffffff'],
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    };
+
+    frame();
   }
 }
