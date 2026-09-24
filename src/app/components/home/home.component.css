@@ -24,6 +24,7 @@
 .board {
   width: 100%;
   max-width: 560px;
+  min-width: 0;
   padding: var(--space-xl);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -37,15 +38,86 @@
 }
 
 .board__header {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) repeat(3, auto);
+  grid-template-areas:
+    'brand    reset  theme sound'
+    'progress progress progress value';
   align-items: center;
   gap: var(--space-md);
 }
 
 .brand {
+  grid-area: brand;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: var(--space-sm);
+}
+
+.brand__text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.brand__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brand__subtitle {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.progress {
+  grid-area: progress;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.progress__bar {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-good-strong), var(--color-accent));
+  transition: width var(--dur-slower) var(--ease-out);
+}
+
+.progress__value {
+  grid-area: value;
+  justify-self: end;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.icon-button--reset {
+  grid-area: reset;
+}
+
+.icon-button--theme {
+  grid-area: theme;
+}
+
+.icon-button--sound {
+  grid-area: sound;
 }
 
 .brand__mark {
@@ -63,51 +135,6 @@
 .brand__mark svg {
   width: 20px;
   height: 20px;
-}
-
-.brand__text {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.brand__title {
-  margin: 0;
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
-}
-
-.brand__subtitle {
-  margin: 0;
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
-.progress {
-  flex: 1;
-  height: 8px;
-  border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-}
-
-.progress__bar {
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--color-good-strong), var(--color-accent));
-  transition: width var(--dur-slower) var(--ease-out);
-}
-
-.progress__value {
-  font-size: 0.85rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-text-muted);
-  white-space: nowrap;
 }
 
 .icon-button {
@@ -226,7 +253,7 @@
 
 .actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-md);
 }
 
@@ -568,10 +595,25 @@
   object-fit: contain;
 }
 
+@media (max-width: 700px) {
+  .brand__subtitle {
+    display: none;
+  }
+}
+
 @media (max-width: 480px) {
   .board {
     padding: var(--space-lg);
     gap: var(--space-lg);
+  }
+
+  .board__header {
+    gap: var(--space-xs);
+  }
+
+  .icon-button {
+    width: 36px;
+    height: 36px;
   }
 
   .steps {
@@ -582,12 +624,8 @@
     width: clamp(5px, 2.5vw, 12px);
   }
 
-  .brand__subtitle {
-    display: none;
-  }
-
   .actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .action {
