@@ -106,7 +106,41 @@ resumen completado.
   `<svg>` en una sola línea (preexistente). No reformatees archivos ajenos al
   cambio sólo para "dejar en verde".
 
+## Deploy (GitHub Pages)
+
+La app publicada vive en `https://jaquinterob.github.io/qmethod/`. Pages usa
+build **legacy**: rama `gh-pages`, root `/`. El build ya sale con
+`base-href /qmethod/`, igual que la ruta del sitio.
+
+Sólo después de cerrar una funcionalidad y con la verificación en verde:
+
+```bash
+npm run build # -> dist/qmethod (base-href /qmethod/)
+
+TMP="$(mktemp -d)"
+git clone --branch gh-pages --depth 1 https://github.com/jaquinterob/qmethod.git "$TMP"
+git -C "$TMP" rm -rq .
+cp -R "$(pwd)/dist/qmethod/." "$TMP"/
+touch "$TMP/.nojekyll" # evita que Jekyll procese los assets
+git -C "$TMP" add -A
+git -C "$TMP" commit -m "deploy: <qué se publica>"
+git -C "$TMP" push origin gh-pages
+
+# verificación
+gh api repos/jaquinterob/qmethod/pages --jq '.status, .html_url'
+curl -s https://jaquinterob.github.io/qmethod/ | grep -o 'main-[A-Z0-9]*\.js'
+```
+
+- Se actualiza `gh-pages` encima (historial limpio); no hace falta recrearla
+  con `--orphan` ni hacer `push --force`.
+- Cambio sólo de docs → no redesplegar: el artefacto de `dist` no cambia.
+- Si `status` no pasa a `built`, revisa
+  `gh api repos/jaquinterob/qmethod/pages/builds`.
+
 ## Commits
 
 Convención Conventional Commits, en inglés, minúsculas:
 `fix: ...`, `feat: ...`, `refactor: ...`, `style: ...`, `test: ...`.
+
+Orden recomendado al cerrar una funcionalidad:
+**verificar → commit → push a `main` → deploy en `gh-pages` → comprobar la URL**.

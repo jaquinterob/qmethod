@@ -39,6 +39,26 @@ Todo en **español**: issues, mensajes de commit no, los commits van en inglés
 5. **Reporte**: resumen de 3-5 líneas con archivos tocados, comandos corridos y
    resultado. La persona decide el commit.
 
+## Pasos recomendados al cerrar una funcionalidad
+
+Cuando una funcionalidad queda terminada y verificada, el cierre habitual es:
+
+1. **Verificación final**: `npm run lint`,
+   `npx ng test --watch=false --browsers=ChromeHeadless`, `npm run build` y
+   revisión visual en los viewports clave.
+2. **Commit de la funcionalidad**: un tema por commit, en inglés y con
+   Conventional Commits (`fix: ...`, `feat: ...`, `docs: ...`).
+3. **Push a `main`**: `git push origin main`.
+4. **Publicar en GitHub Pages**: regenerar el build y subirlo a la rama
+   `gh-pages` (pasos exactos en [AGENTS.md](./AGENTS.md)).
+5. **Comprobar la publicación**:
+   `gh api repos/jaquinterob/qmethod/pages --jq '.status, .html_url'` debe
+   responder `built` y abrir `https://jaquinterob.github.io/qmethod/`.
+6. **Reporte**: qué cambió, qué se verificó, URL publicada y pendientes.
+
+Si el cambio es sólo de docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`),
+el paso 4 se salta: el artefacto de `dist` no cambia.
+
 ## Cómo pedir un cambio
 
 Ejemplos que funcionan:
@@ -77,6 +97,8 @@ Observado: ...
 - La persona pide explícitamente "commitea"; el agente nunca lo hace solo.
 - Antes de commitear: `git status`, `git diff` y `git log --oneline -10`.
 - Mensaje en inglés, estilo `fix: ...` / `feat: ...`, un tema por commit.
+- Orden recomendado tras cerrar una funcionalidad: **commit → push → deploy
+  en GitHub Pages** (ver arriba).
 - Sin `--force`, sin amend sobre commits ya push-eados, sin saltarse hooks.
 
 ## Cuando algo queda a medias
