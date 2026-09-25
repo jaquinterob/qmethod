@@ -4,9 +4,17 @@ Contexto para agentes de IA que trabajan en `qmethod`. Léelo antes de tocar có
 
 ## Qué es
 
-Juego de rachas: avanzas 10 pasos sin romper la racha (5 inocentes + 5 de riesgo).
+Juego de rachas con **4 modos de práctica** (Grupo 5 "Taller del Músico"):
+`boceto` (3+3), `ejercicio` (5+5, por defecto), `estudio` (10+10),
+`concierto` (20+20). Cada mitad es una ronda: la segunda es la **zona de
+riesgo** y fallar ahí reinicia la racha y suma bloqueos (2 por fallo en
+`concierto`). En niveles largos los pasos se dibujan en **filas de 10 con una
+divisoria horizontal** ("Zona de riesgo"); en `boceto`/`ejercicio` sigue siendo
+una sola fila con el divisor vertical de siempre.
 Stack: **Angular 17.3** (standalone + signals), RxJS, zone.js, Karma/Jasmine.
 UI en español, tema oscuro/claro, tipografía Inter self-hosted, motion por tokens.
+Cada modo tiene su acento de color (data-mode en `.container`) y hay un
+`<aside class="ad-slot">` como placeholder de publicidad.
 
 - Selector prefix: `q` (`q-home`, `q-feedback`).
 - Deploy: `npm run build` genera `dist/qmethod` con `base-href /qmethod/` y el
@@ -14,13 +22,13 @@ UI en español, tema oscuro/claro, tipografía Inter self-hosted, motion por tok
 
 ## Comandos
 
-| Comando                                     | Qué hace                                  |
-| ------------------------------------------- | ----------------------------------------- |
-| `npm start`                                 | Dev server en `http://localhost:4200/`     |
-| `npm run build`                             | Build prod (**correrlo**: tiene budgets)   |
-| `npx ng test --watch=false --browsers=ChromeHeadless` | Tests unitarios en CI-style        |
-| `npm run lint`                              | ESLint (TS + plantillas Angular)          |
-| `npm run format` / `npm run format:check`   | Prettier escribir / verificar             |
+| Comando                                               | Qué hace                                 |
+| ----------------------------------------------------- | ---------------------------------------- |
+| `npm start`                                           | Dev server en `http://localhost:4200/`   |
+| `npm run build`                                       | Build prod (**correrlo**: tiene budgets) |
+| `npx ng test --watch=false --browsers=ChromeHeadless` | Tests unitarios en CI-style              |
+| `npm run lint`                                        | ESLint (TS + plantillas Angular)         |
+| `npm run format` / `npm run format:check`             | Prettier escribir / verificar            |
 
 **Verificación mínima antes de decir "listo":** `npm run lint` +
 `npx ng test --watch=false --browsers=ChromeHeadless` + `npm run build`.
@@ -35,7 +43,7 @@ src/
     app.routes.ts                # sólo la ruta '' -> HomeComponent
     app.config.ts                # provideRouter + provideAnimations
     core/
-      constants/game-config.ts   # tuning (pasos, tiempos)
+      constants/game-config.ts   # GAME_MODES (4 modos) + GAME_CONFIG
       services/game.service.ts   # estado con signals + persistencia
       services/motion-preference.service.ts
       services/sound.service.ts
@@ -49,8 +57,8 @@ src/
 ## Convenciones
 
 - **Estado**: todo vive en `GameService` (signals + `computed`), no en el
-  componente. Persistencia en `localStorage`: clave `qmethod:game` (partida) y
-  `qmethod:theme` (tema).
+  componente. Persistencia en `localStorage`: clave `qmethod:game` (partida),
+  `qmethod:theme` (tema) y `qmethod:mode` (nivel activo).
 - **Estilos**: CSS por componente (encapsulado). Clases en estilo BEM-ish:
   `.board__header`, `.action--good`, `.step--done`, `.icon-button--reset`.
 - **Tokens**: espacios/radios/colores/duraciones salen de `:root` en
@@ -88,7 +96,7 @@ Cómo verificar un cambio de layout: en DevTools emular
 overflow:
 
 ```js
-document.documentElement.scrollWidth <= document.documentElement.clientWidth
+document.documentElement.scrollWidth <= document.documentElement.clientWidth;
 ```
 
 Estados a revisar además del inicial: feedback (`bad`/`good`), modo fuego y
