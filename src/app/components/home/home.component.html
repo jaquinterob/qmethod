@@ -16,7 +16,9 @@
         </span>
         <div class="brand__text">
           <h1 class="brand__title">qmethod</h1>
-          <p class="brand__subtitle">Avanza los 10 pasos sin romper la racha</p>
+          <p class="brand__subtitle">
+            Avanza los {{ game.totalSteps() }} pasos sin romper la racha
+          </p>
         </div>
       </div>
 
@@ -388,10 +390,10 @@
       <div class="modal__panel">
         <h2 id="mode-modal-title" class="modal__title">Cambiar a {{ modesById[target].label }}</h2>
         <p class="modal__text">
-          Llevas {{ game.doneCount() }} de {{ game.totalSteps() }} fragmentos en
+          Llevas {{ game.doneCount() }} de {{ game.totalSteps() }} pasos en
           <strong>{{ modesById[game.mode()].label }}</strong
           >. Al cambiar de nivel la partida se reinicia y empiezas con
-          {{ modesById[target].innocentSteps + modesById[target].punishableSteps }} fragmentos de
+          {{ modesById[target].innocentSteps + modesById[target].punishableSteps }} pasos de
           <strong>{{ modesById[target].label }}</strong
           >.
         </p>
@@ -421,8 +423,12 @@
         <h2 id="method-modal-title" class="modal__title">¿Cómo funciona?</h2>
         <ul class="method__list">
           <li>
-            <strong>Fragmenta</strong>: divides lo que memorizas en
-            {{ game.plannedSteps() }} fragmentos.
+            <strong>Elige qué aprender</strong>: algo concreto que quieras dominar, por ejemplo una
+            parte difícil de una pieza de piano o un texto que estés memorizando.
+          </li>
+          <li>
+            <strong>Escoge tu modo</strong>: define cuántos pasos debes cumplir. Cuanto más te
+            exijas, mejores resultados obtendrás.
           </li>
           <li><strong>Racha</strong>: sólo avanzas si lo tocas o lo dices sin mirar.</li>
           <li>
@@ -432,7 +438,7 @@
           </li>
         </ul>
         <p class="method__mode">
-          {{ game.modeConfig().label }} · {{ game.plannedSteps() }} fragmentos · ~{{
+          {{ game.modeConfig().label }} · {{ game.plannedSteps() }} pasos · ~{{
             game.modeConfig().minutes
           }}
           min · {{ game.modeConfig().tagline }}

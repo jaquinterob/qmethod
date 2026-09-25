@@ -22,7 +22,7 @@ export const GAME_MODES: Record<GameModeId, GameMode> = {
   boceto: {
     id: 'boceto',
     label: 'Boceto',
-    tagline: 'Calienta sin miedo: 6 fragmentos, un fallo = un bloqueo.',
+    tagline: 'Calienta sin miedo: 6 pasos, un fallo = un bloqueo.',
     innocentSteps: 3,
     punishableSteps: 3,
     fireThreshold: 3,
@@ -32,7 +32,7 @@ export const GAME_MODES: Record<GameModeId, GameMode> = {
   ejercicio: {
     id: 'ejercicio',
     label: 'Ejercicio',
-    tagline: 'La sesión diaria: 10 fragmentos con zona de riesgo real.',
+    tagline: 'La sesión diaria: 10 pasos con zona de riesgo real.',
     innocentSteps: 5,
     punishableSteps: 5,
     fireThreshold: 5,
@@ -42,7 +42,7 @@ export const GAME_MODES: Record<GameModeId, GameMode> = {
   estudio: {
     id: 'estudio',
     label: 'Estudio',
-    tagline: 'Trabajo serio: 20 fragmentos sin mirar atrás.',
+    tagline: 'Trabajo serio: 20 pasos sin mirar atrás.',
     innocentSteps: 10,
     punishableSteps: 10,
     fireThreshold: 10,
@@ -52,7 +52,7 @@ export const GAME_MODES: Record<GameModeId, GameMode> = {
   concierto: {
     id: 'concierto',
     label: 'Concierto',
-    tagline: 'Sin red: 40 fragmentos y cada fallo en riesgo suma 2 bloqueos.',
+    tagline: 'Sin red: 40 pasos y cada fallo en riesgo suma 2 bloqueos.',
     innocentSteps: 20,
     punishableSteps: 20,
     fireThreshold: 20,
