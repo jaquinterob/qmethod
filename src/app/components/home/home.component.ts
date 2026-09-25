@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, HostListener, computed, effect, inject, signal } from '@angular/core';
 import {
   animate,
   keyframes,
@@ -14,6 +14,12 @@ import { MotionPreference } from '../../core/services/motion-preference.service'
 import { SoundService } from '../../core/services/sound.service';
 import { FeedbackComponent } from '../feedback/feedback.component';
 import { DUR, EASE, T } from '../../shared/motion-tokens';
+import {
+  GAME_MODE_ORDER,
+  GAME_MODES,
+  GameMode,
+  GameModeId,
+} from '../../core/constants/game-config';
 
 @Component({
   selector: 'q-home',
@@ -95,6 +101,54 @@ export class HomeComponent {
   }
 
   readonly progressPercent = computed(() => Math.round(this.game.progress() * 100));
+
+  readonly modes: GameMode[] = GAME_MODE_ORDER.map((id) => GAME_MODES[id]);
+
+  readonly modesById = GAME_MODES;
+
+  readonly pendingMode = signal<GameModeId | null>(null);
+
+  readonly showMethod = signal(false);
+
+  selectMode(id: GameModeId): void {
+    if (id === this.game.mode()) {
+      return;
+    }
+    if (this.game.doneCount() > 0) {
+      this.pendingMode.set(id);
+      return;
+    }
+    this.game.setMode(id);
+  }
+
+  confirmModeChange(): void {
+    const target = this.pendingMode();
+    this.pendingMode.set(null);
+    if (target) {
+      this.game.setMode(target);
+    }
+  }
+
+  cancelModeChange(): void {
+    this.pendingMode.set(null);
+  }
+
+  closeMethod(): void {
+    this.showMethod.set(false);
+  }
+
+  onModalBackdrop(event: Event): void {
+    if (event.target === event.currentTarget) {
+      this.cancelModeChange();
+      this.closeMethod();
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.cancelModeChange();
+    this.closeMethod();
+  }
 
   readonly summaryLine = computed(() => {
     const errors = this.game.failAttempts();

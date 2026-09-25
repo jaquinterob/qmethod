@@ -1,4 +1,4 @@
-<div class="container" [class.container--fire]="game.showFire()">
+<div class="container" [class.container--fire]="game.showFire()" [attr.data-mode]="game.mode()">
   <main class="board" [@.disabled]="motion.reduced()" [@failShake]="game.failAttempts()">
     <header class="board__header">
       <div class="brand">
@@ -97,10 +97,29 @@
       </button>
     </header>
 
+    <div class="modes" role="group" aria-label="Nivel de práctica">
+      @for (m of modes; track m.id) {
+        <button
+          type="button"
+          class="mode"
+          [class.mode--active]="game.mode() === m.id"
+          [attr.aria-pressed]="game.mode() === m.id"
+          (click)="selectMode(m.id)"
+        >
+          {{ m.label }}
+        </button>
+      }
+    </div>
+
+    <button type="button" class="method-open" (click)="showMethod.set(true)">
+      ¿Cómo funciona?
+    </button>
+
     <section class="steps" [@stepsAnim]="game.steps().length" aria-label="Pasos del método">
       @for (step of game.steps(); track $index) {
         @if ($index === game.punishableStartIndex()) {
           <span class="steps__divider" aria-hidden="true">
+            <span class="steps__divider-label">Zona de riesgo</span>
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -335,6 +354,13 @@
     }
   </main>
 
+  <aside class="ad-slot" aria-label="Anuncio">
+    <span class="ad-slot__tag">Publicidad</span>
+    <span class="ad-slot__copy"
+      >Espacio reservado para anunciantes: así se mantiene qmethod gratis.</span
+    >
+  </aside>
+
   @if (game.showFeedback()) {
     <div class="feedback-layer" [@feedback]>
       <q-feedback [buttonPressed]="game.buttonPressed()"></q-feedback>
@@ -348,6 +374,80 @@
   @if (game.showFire()) {
     <div class="fire" [@fire] aria-hidden="true">
       <img src="assets/fire.gif" alt="" />
+    </div>
+  }
+
+  @if (pendingMode(); as target) {
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="mode-modal-title"
+      (click)="onModalBackdrop($event)"
+    >
+      <div class="modal__panel">
+        <h2 id="mode-modal-title" class="modal__title">Cambiar a {{ modesById[target].label }}</h2>
+        <p class="modal__text">
+          Llevas {{ game.doneCount() }} de {{ game.totalSteps() }} fragmentos en
+          <strong>{{ modesById[game.mode()].label }}</strong
+          >. Al cambiar de nivel la partida se reinicia y empiezas con
+          {{ modesById[target].innocentSteps + modesById[target].punishableSteps }} fragmentos de
+          <strong>{{ modesById[target].label }}</strong
+          >.
+        </p>
+        <div class="modal__actions">
+          <button type="button" class="modal__btn" autofocus (click)="cancelModeChange()">
+            Seguir aquí
+          </button>
+          <button
+            type="button"
+            class="modal__btn modal__btn--primary"
+            (click)="confirmModeChange()"
+          >
+            Cambiar nivel
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else if (showMethod()) {
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="method-modal-title"
+      (click)="onModalBackdrop($event)"
+    >
+      <div class="modal__panel">
+        <h2 id="method-modal-title" class="modal__title">¿Cómo funciona?</h2>
+        <ul class="method__list">
+          <li>
+            <strong>Fragmenta</strong>: divides lo que memorizas en
+            {{ game.plannedSteps() }} fragmentos.
+          </li>
+          <li><strong>Racha</strong>: sólo avanzas si lo tocas o lo dices sin mirar.</li>
+          <li>
+            <strong>Zona de riesgo</strong>: la segunda mitad. Si fallas ahí, se reinicia la racha y
+            sumas {{ game.modeConfig().punishmentPenalty }}
+            {{ game.modeConfig().punishmentPenalty === 1 ? 'bloqueo' : 'bloqueos' }}.
+          </li>
+        </ul>
+        <p class="method__mode">
+          {{ game.modeConfig().label }} · {{ game.plannedSteps() }} fragmentos · ~{{
+            game.modeConfig().minutes
+          }}
+          min · {{ game.modeConfig().tagline }}
+        </p>
+        <div class="modal__actions modal__actions--single">
+          <button
+            type="button"
+            class="modal__btn modal__btn--primary"
+            autofocus
+            (click)="closeMethod()"
+          >
+            Entendido
+          </button>
+        </div>
+      </div>
     </div>
   }
 </div>

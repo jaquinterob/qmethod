@@ -2,7 +2,13 @@ import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription, timer } from 'rxjs';
 import { ButtonPressed, GameStats, Step } from '../../models/step';
-import { GAME_CONFIG } from '../constants/game-config';
+import {
+  DEFAULT_MODE,
+  GAME_CONFIG,
+  GAME_MODES,
+  GameMode,
+  GameModeId,
+} from '../constants/game-config';
 import { SoundService } from './sound.service';
 
 interface GameSnapshot {
@@ -20,6 +26,13 @@ export class GameService {
   private readonly destroyRef = inject(DestroyRef);
   private readonly sound = inject(SoundService);
   private readonly storageKey = 'qmethod:game';
+  private readonly modeStorageKey = 'qmethod:mode';
+
+  readonly mode = signal<GameModeId>(this.loadMode());
+  readonly modeConfig = computed<GameMode>(() => GAME_MODES[this.mode()]);
+  readonly plannedSteps = computed(
+    () => this.modeConfig().innocentSteps + this.modeConfig().punishableSteps
+  );
 
   readonly steps = signal<Step[]>(this.buildInitialSteps());
   readonly currentStepIndex = signal(0);
@@ -79,13 +92,33 @@ export class GameService {
     this.commitStreak();
     const current = this.currentStep();
     if (current?.type === 'punishable') {
-      this.steps.update((steps) => [...steps, { type: 'punishable', done: false }]);
+      const penalty = this.modeConfig().punishmentPenalty;
+      this.steps.update((steps) => [
+        ...steps,
+        ...Array.from(
+          { length: penalty },
+          () =>
+            ({
+              type: 'punishable',
+              done: false,
+            }) as Step
+        ),
+      ]);
       this.punishments.update((punishments) => punishments + 1);
     }
     this.failAttempts.update((failAttempts) => failAttempts + 1);
     this.showFeedbackFor('bad');
     this.persist();
     this.sound.playBad();
+  }
+
+  setMode(id: GameModeId): void {
+    if (id === this.mode() || !GAME_MODES[id]) {
+      return;
+    }
+    this.mode.set(id);
+    this.persistMode();
+    this.reset();
   }
 
   reset(): void {
@@ -137,7 +170,7 @@ export class GameService {
   }
 
   private scheduleFire(): void {
-    if (this.doneCount() !== this.config.fireThreshold) {
+    if (this.doneCount() !== this.modeConfig().fireThreshold) {
       return;
     }
     this.showFireTimer.unsubscribe();
@@ -150,9 +183,10 @@ export class GameService {
   }
 
   private buildInitialSteps(): Step[] {
+    const mode = this.modeConfig();
     return [
       ...Array.from(
-        { length: this.config.initialInnocentSteps },
+        { length: mode.innocentSteps },
         () =>
           ({
             type: 'innocent',
@@ -160,7 +194,7 @@ export class GameService {
           }) as Step
       ),
       ...Array.from(
-        { length: this.config.initialPunishableSteps },
+        { length: mode.punishableSteps },
         () =>
           ({
             type: 'punishable',
@@ -168,6 +202,26 @@ export class GameService {
           }) as Step
       ),
     ];
+  }
+
+  private loadMode(): GameModeId {
+    try {
+      const saved = localStorage.getItem(this.modeStorageKey) as GameModeId | null;
+      if (saved && GAME_MODES[saved]) {
+        return saved;
+      }
+    } catch {
+      // Sin almacenamiento: se usa el modo por defecto.
+    }
+    return DEFAULT_MODE;
+  }
+
+  private persistMode(): void {
+    try {
+      localStorage.setItem(this.modeStorageKey, this.mode());
+    } catch {
+      // Sin almacenamiento: el modo dura sólo esta sesión.
+    }
   }
 
   private hydrate(): void {
