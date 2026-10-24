@@ -1,0 +1,113 @@
+{
+  "configVersion": 1,
+  "timestamp": 1792803156216,
+  "index": "/qmethod/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/qmethod/favicon.ico",
+        "/qmethod/index.html",
+        "/qmethod/main-M5H5G55R.js",
+        "/qmethod/manifest.webmanifest",
+        "/qmethod/polyfills-DVPPODNC.js",
+        "/qmethod/styles-ESG435R4.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/qmethod/assets/error/1.gif",
+        "/qmethod/assets/error/2.gif",
+        "/qmethod/assets/error/3.gif",
+        "/qmethod/assets/error/4.gif",
+        "/qmethod/assets/error/5.gif",
+        "/qmethod/assets/fire.gif",
+        "/qmethod/assets/fonts/inter-latin-400.woff2",
+        "/qmethod/assets/fonts/inter-latin-500.woff2",
+        "/qmethod/assets/fonts/inter-latin-600.woff2",
+        "/qmethod/assets/fonts/inter-latin-700.woff2",
+        "/qmethod/assets/fonts/inter-latin-800.woff2",
+        "/qmethod/assets/icons/icon-128x128.png",
+        "/qmethod/assets/icons/icon-144x144.png",
+        "/qmethod/assets/icons/icon-152x152.png",
+        "/qmethod/assets/icons/icon-192x192.png",
+        "/qmethod/assets/icons/icon-384x384.png",
+        "/qmethod/assets/icons/icon-512x512.png",
+        "/qmethod/assets/icons/icon-72x72.png",
+        "/qmethod/assets/icons/icon-96x96.png",
+        "/qmethod/assets/success.gif",
+        "/qmethod/assets/success/1.gif",
+        "/qmethod/assets/success/2.gif",
+        "/qmethod/assets/success/3.gif",
+        "/qmethod/assets/success/4.gif",
+        "/qmethod/assets/success/5.gif"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/qmethod/assets/error/1.gif": "0d83e865d3ce933e4501ea7578ff56a1c557bec4",
+    "/qmethod/assets/error/2.gif": "cb330421366f468998291be975d89274fedba315",
+    "/qmethod/assets/error/3.gif": "2ecb32339b15260dbbab56d8f4b7534fc3277cb4",
+    "/qmethod/assets/error/4.gif": "a1f329a05ef01db8f3e954838c921e7c4c158070",
+    "/qmethod/assets/error/5.gif": "9e1b69c7f666d1259218a467543a6f8dc84ca253",
+    "/qmethod/assets/fire.gif": "bdb8e1969a18008be6a9e895700e6f58a7458a47",
+    "/qmethod/assets/fonts/inter-latin-400.woff2": "68f645c6b6ff12e25c54b13d4ed119e631dcbb26",
+    "/qmethod/assets/fonts/inter-latin-500.woff2": "6b66c741bf8bc3ce248af04b2051a648a38391d6",
+    "/qmethod/assets/fonts/inter-latin-600.woff2": "e0d61f6dc511d64a072b2f4dc94e155ecf1bb6f6",
+    "/qmethod/assets/fonts/inter-latin-700.woff2": "5197a7aeb22454110aa1f3ef3ed4c98ca7ef1ba1",
+    "/qmethod/assets/fonts/inter-latin-800.woff2": "207ec5e15f552e6110c3133ecb7dcd7836d42ffe",
+    "/qmethod/assets/icons/icon-128x128.png": "835579b6141a453f16e4bdc918d2f6a66035ca07",
+    "/qmethod/assets/icons/icon-144x144.png": "aa3f4819410161d6506328b40e7fd073e66c7fc7",
+    "/qmethod/assets/icons/icon-152x152.png": "24871c2413869fdf24ea3383373d57f1172ca51d",
+    "/qmethod/assets/icons/icon-192x192.png": "4d53f5a36045cdca5c0865bf542935c436cd0a77",
+    "/qmethod/assets/icons/icon-384x384.png": "65f9429ad5e861d401f60be426610ca1981b0013",
+    "/qmethod/assets/icons/icon-512x512.png": "6647d77c81b5fb61e71f99a88169f67147e2786b",
+    "/qmethod/assets/icons/icon-72x72.png": "8d04c1ab4b94f4c683034666c5c7c57699fbd34a",
+    "/qmethod/assets/icons/icon-96x96.png": "7866c0774f41a60b61f2d0596d9e713db90456a9",
+    "/qmethod/assets/success.gif": "003c039769f2ac5fc676c4786b67a9d3a4d4f3ba",
+    "/qmethod/assets/success/1.gif": "b157bb196c068d6a202d5800961f3278f3666ec1",
+    "/qmethod/assets/success/2.gif": "e86f8866cbf73908f26d0d36b6ebc7ed1b7981be",
+    "/qmethod/assets/success/3.gif": "fa1f821364e4d8484f4b3e40715ce0c3193e6f67",
+    "/qmethod/assets/success/4.gif": "72c2d512f446e27ba1f141ad8a63798ae05d5d2b",
+    "/qmethod/assets/success/5.gif": "b6d445ea39ce95a9ec84fdc01ab866d0b8aadb91",
+    "/qmethod/favicon.ico": "2a2141b8d1b90de07cfa10ee9d2b2d7adc12486c",
+    "/qmethod/index.html": "a946564f084434bad5e677040dd613f892cb7d20",
+    "/qmethod/main-M5H5G55R.js": "90dd5e578b4a0c31526f185c2b04946245d2970f",
+    "/qmethod/manifest.webmanifest": "e9afeefa88c3db9b9383bd05f009b4a1e118bcd9",
+    "/qmethod/polyfills-DVPPODNC.js": "79878070e1bf87bdb6f993bdf60a2bf5fac15096",
+    "/qmethod/styles-ESG435R4.css": "db111a1dd3f3d659511b85cf1863448638c578bf"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
