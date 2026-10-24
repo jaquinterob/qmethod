@@ -5,8 +5,8 @@
   "theme_color": "#0a0e19",
   "background_color": "#0a0e19",
   "display": "standalone",
-  "scope": "/qmethod/",
-  "start_url": "/qmethod/",
+  "scope": "/",
+  "start_url": "/",
   "lang": "es",
   "icons": [
     {

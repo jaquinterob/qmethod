@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jaquinterob.github.io/qmethod/sitemap.xml
+Sitemap: https://qmethod.jaquinterob.com/sitemap.xml
