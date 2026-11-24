@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --base-href /qmethod/",
+    "build": "ng build --base-href / && cp dist/qmethod/index.html dist/qmethod/404.html",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
@@ -21,6 +21,7 @@
     "@angular/platform-browser": "17.3.12",
     "@angular/platform-browser-dynamic": "17.3.12",
     "@angular/router": "17.3.12",
+    "@angular/service-worker": "^17.3.12",
     "@types/canvas-confetti": "^1.9.0",
     "canvas-confetti": "^1.9.4",
     "rxjs": "~7.8.0",

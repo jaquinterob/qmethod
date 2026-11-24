@@ -18,7 +18,14 @@
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/manifest.webmanifest",
+              { "glob": "CNAME", "input": "src", "output": "/" },
+              { "glob": "robots.txt", "input": "src", "output": "/" },
+              { "glob": "sitemap.xml", "input": "src", "output": "/" }
+            ],
             "styles": ["src/styles.css"],
             "scripts": []
           },
@@ -36,7 +43,9 @@
                   "maximumError": "12kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             },
             "development": {
               "optimization": false,

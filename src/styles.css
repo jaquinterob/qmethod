@@ -42,14 +42,15 @@
   --font-family:
     'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
-  --color-bg-0: #0a0e19;
-  --color-bg-1: #101527;
+  /* Oscuro (carbón) — default */
+  --color-bg-0: #0e0e12;
+  --color-bg-1: #17171d;
   --color-surface: rgba(255, 255, 255, 0.06);
   --color-surface-raised: rgba(255, 255, 255, 0.09);
   --color-border: rgba(255, 255, 255, 0.1);
   --color-border-strong: rgba(255, 255, 255, 0.18);
   --color-text: #eef2f8;
-  --color-text-muted: #97a5bd;
+  --color-text-muted: #9aa0b4;
 
   --color-good: #34d399;
   --color-good-strong: #10b981;
@@ -66,6 +67,8 @@
   --color-accent-soft: rgba(251, 191, 36, 0.14);
 
   --color-fire: #ff4d2e;
+
+  --theme-color: #0e0e12;
 
   --radius-xs: 6px;
   --radius-sm: 10px;
@@ -111,6 +114,7 @@
 html,
 body {
   height: 100%;
+  touch-action: manipulation;
 }
 
 body {
@@ -137,7 +141,7 @@ button {
   }
 }
 
-/* ── Light theme ── */
+/* ── Claro ── */
 .light {
   --color-bg-0: #f5f6fa;
   --color-bg-1: #ebedf5;
@@ -162,6 +166,8 @@ button {
   --color-accent-strong: #f59e0b;
   --color-accent-soft: rgba(217, 119, 6, 0.1);
 
+  --theme-color: #f5f6fa;
+
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 16px 40px -16px rgba(0, 0, 0, 0.15);
   --shadow-glow-good: 0 0 0 1px rgba(16, 185, 129, 0.2), 0 12px 40px -12px rgba(16, 185, 129, 0.25);
@@ -170,13 +176,48 @@ button {
     0 0 0 1px rgba(245, 158, 11, 0.2), 0 12px 40px -12px rgba(245, 158, 11, 0.25);
 }
 
+/* ── Midnight (azul noche) ── */
+.midnight {
+  --color-bg-0: #070b1a;
+  --color-bg-1: #0f1630;
+  --color-surface: rgba(140, 170, 255, 0.07);
+  --color-surface-raised: rgba(140, 170, 255, 0.11);
+  --color-border: rgba(160, 185, 255, 0.14);
+  --color-border-strong: rgba(180, 200, 255, 0.24);
+  --color-text: #e8eefc;
+  --color-text-muted: #8fa0c4;
+
+  --color-good: #34d399;
+  --color-good-strong: #10b981;
+  --color-good-deep: #059669;
+  --color-good-soft: rgba(52, 211, 153, 0.16);
+
+  --color-bad: #fb7185;
+  --color-bad-strong: #f43f5e;
+  --color-bad-deep: #e11d48;
+  --color-bad-soft: rgba(251, 113, 133, 0.16);
+
+  --color-accent: #fbbf24;
+  --color-accent-strong: #f59e0b;
+  --color-accent-soft: rgba(251, 191, 36, 0.16);
+
+  --theme-color: #070b1a;
+
+  --shadow-sm: 0 1px 2px rgba(0, 8, 40, 0.45);
+  --shadow-md: 0 18px 44px -16px rgba(0, 12, 48, 0.75);
+  --shadow-glow-good: 0 0 0 1px rgba(52, 211, 153, 0.3), 0 12px 40px -12px rgba(16, 185, 129, 0.55);
+  --shadow-glow-bad: 0 0 0 1px rgba(251, 113, 133, 0.3), 0 12px 40px -12px rgba(244, 63, 94, 0.5);
+  --shadow-glow-accent:
+    0 0 0 1px rgba(251, 191, 36, 0.34), 0 12px 40px -12px rgba(245, 158, 11, 0.55);
+}
+
 body {
   transition:
     background-color var(--dur-slow) var(--ease-out),
     color var(--dur-slow) var(--ease-out);
 }
 
-/* ── Selector de modos (Grupo 5: Taller del Músico) ── */
+/* ── Selector de modos (origen: Taller del Músico; uso: cualquier memorización) ── */
 .modes {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

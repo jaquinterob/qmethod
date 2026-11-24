@@ -4,8 +4,12 @@ Contexto para agentes de IA que trabajan en `qmethod`. Léelo antes de tocar có
 
 ## Qué es
 
-Juego de rachas con **4 modos de práctica** (Grupo 5 "Taller del Músico"):
-`boceto` (3+3), `ejercicio` (5+5, por defecto), `estudio` (10+10),
+Sesión de **memorización con racha** (agnóstica al contenido: texto, idiomas,
+música, temario, etc.). El usuario elige qué memorizar; la app exige avanzar
+solo si lo hace **sin mirar**. Nació en el Grupo 5 "Taller del Músico", pero el
+producto no se limita a piano.
+
+**4 modos:** `boceto` (3+3), `ejercicio` (5+5, por defecto), `estudio` (10+10),
 `concierto` (20+20). Cada mitad es una ronda: la segunda es la **zona de
 riesgo** y fallar ahí reinicia la racha y suma bloqueos (2 por fallo en
 `concierto`). En niveles largos los pasos se dibujan en **filas de 10 con una
@@ -14,7 +18,7 @@ una sola fila con el divisor vertical de siempre.
 Stack: **Angular 17.3** (standalone + signals), RxJS, zone.js, Karma/Jasmine.
 UI en español, tema oscuro/claro, tipografía Inter self-hosted, motion por tokens.
 Cada modo tiene su acento de color (data-mode en `.container`) y hay un
-`<aside class="ad-slot">` como placeholder de publicidad.
+slot de publicidad (`q-ad-banner` / `.ad-slot`).
 
 - Selector prefix: `q` (`q-home`, `q-feedback`).
 - Deploy: `npm run build` genera `dist/qmethod` con `base-href /qmethod/` y el
@@ -116,14 +120,20 @@ resumen completado.
 
 ## Deploy (GitHub Pages)
 
-La app publicada vive en `https://jaquinterob.github.io/qmethod/`. Pages usa
-build **legacy**: rama `gh-pages`, root `/`. El build ya sale con
-`base-href /qmethod/`, igual que la ruta del sitio.
+URL canónica: **`https://qmethod.jaquinterob.com/`** (subdominio → Pages).  
+Fallback histórico: `https://jaquinterob.github.io/qmethod/` (puede romper assets
+si el build usa `base-href /`; prioriza el subdominio).
+
+Pages: rama `gh-pages`, root `/`. El build sale con `base-href /`, copia
+`404.html` (SPA) e incluye `CNAME` → `qmethod.jaquinterob.com`.
+
+DNS (lo hace el humano, no el agente): CNAME `qmethod` → `jaquinterob.github.io`
+sin tocar el apex del VPS. Detalle: [`docs/monetizacion.md`](docs/monetizacion.md).
 
 Sólo después de cerrar una funcionalidad y con la verificación en verde:
 
 ```bash
-npm run build # -> dist/qmethod (base-href /qmethod/)
+npm run build # -> dist/qmethod (base-href /, 404.html, CNAME)
 
 TMP="$(mktemp -d)"
 git clone --branch gh-pages --depth 1 https://github.com/jaquinterob/qmethod.git "$TMP"
@@ -135,8 +145,8 @@ git -C "$TMP" commit -m "deploy: <qué se publica>"
 git -C "$TMP" push origin gh-pages
 
 # verificación
-gh api repos/jaquinterob/qmethod/pages --jq '.status, .html_url'
-curl -s https://jaquinterob.github.io/qmethod/ | grep -o 'main-[A-Z0-9]*\.js'
+gh api repos/jaquinterob/qmethod/pages --jq '.cname, .status, .https_enforced'
+curl -sI https://qmethod.jaquinterob.com/ | head -5
 ```
 
 - Se actualiza `gh-pages` encima (historial limpio); no hace falta recrearla
@@ -144,6 +154,7 @@ curl -s https://jaquinterob.github.io/qmethod/ | grep -o 'main-[A-Z0-9]*\.js'
 - Cambio sólo de docs → no redesplegar: el artefacto de `dist` no cambia.
 - Si `status` no pasa a `built`, revisa
   `gh api repos/jaquinterob/qmethod/pages/builds`.
+- IDs de AdSense/GA4: [`src/app/core/constants/site-config.ts`](src/app/core/constants/site-config.ts).
 
 ## Commits
 

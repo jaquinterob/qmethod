@@ -1,0 +1,19 @@
+<aside class="ad-slot" aria-label="Anuncio">
+  <span class="ad-slot__tag">Publicidad</span>
+  @if (enabled) {
+    <ins
+      #adIns
+      class="adsbygoogle ad-slot__unit"
+      style="display: block"
+      [attr.data-ad-client]="client"
+      [attr.data-ad-slot]="slot"
+      data-ad-format="horizontal"
+      data-full-width-responsive="true"
+    ></ins>
+  } @else {
+    <span class="ad-slot__copy"
+      >Espacio reservado para anunciantes: así se mantiene qmethod gratis.</span
+    >
+  }
+  <a class="ad-slot__privacy" routerLink="/privacidad">Privacidad</a>
+</aside>

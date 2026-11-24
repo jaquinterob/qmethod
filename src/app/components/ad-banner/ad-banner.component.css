@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+}
+
+.ad-slot__unit {
+  width: 100%;
+  min-height: 50px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.ad-slot__privacy {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  opacity: 0.85;
+}
+
+.ad-slot__privacy:hover,
+.ad-slot__privacy:focus-visible {
+  color: var(--color-text);
+  opacity: 1;
+}

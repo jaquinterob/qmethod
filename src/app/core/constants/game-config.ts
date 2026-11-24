@@ -42,7 +42,7 @@ export const GAME_MODES: Record<GameModeId, GameMode> = {
   estudio: {
     id: 'estudio',
     label: 'Estudio',
-    tagline: 'Trabajo serio: 20 pasos sin mirar atrás.',
+    tagline: 'Trabajo serio: 20 pasos memorizando sin mirar.',
     innocentSteps: 10,
     punishableSteps: 10,
     fireThreshold: 10,

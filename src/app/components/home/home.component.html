@@ -17,7 +17,7 @@
         <div class="brand__text">
           <h1 class="brand__title">qmethod</h1>
           <p class="brand__subtitle">
-            Avanza los {{ game.totalSteps() }} pasos sin romper la racha
+            Memoriza sin mirar · {{ game.totalSteps() }} pasos, sin romper la racha
           </p>
         </div>
       </div>
@@ -61,18 +61,31 @@
         class="icon-button icon-button--theme"
         type="button"
         (click)="toggleTheme()"
-        [title]="darkMode() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
-        [attr.aria-label]="darkMode() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+        [title]="themeToggleLabel()"
+        [attr.aria-label]="themeToggleLabel()"
+        [attr.data-theme]="theme()"
       >
-        @if (darkMode()) {
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="4" />
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-          </svg>
-        } @else {
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-          </svg>
+        @switch (theme()) {
+          @case ('dark') {
+            <!-- siguiente: claro → sol -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+            </svg>
+          }
+          @case ('light') {
+            <!-- siguiente: midnight → estrellas -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3Z" />
+              <path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8L19 14Z" />
+            </svg>
+          }
+          @default {
+            <!-- siguiente: oscuro → luna -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+            </svg>
+          }
         }
       </button>
 
@@ -356,12 +369,7 @@
     }
   </main>
 
-  <aside class="ad-slot" aria-label="Anuncio">
-    <span class="ad-slot__tag">Publicidad</span>
-    <span class="ad-slot__copy"
-      >Espacio reservado para anunciantes: así se mantiene qmethod gratis.</span
-    >
-  </aside>
+  <q-ad-banner />
 
   @if (game.showFeedback()) {
     <div class="feedback-layer" [@feedback]>
@@ -423,14 +431,17 @@
         <h2 id="method-modal-title" class="modal__title">¿Cómo funciona?</h2>
         <ul class="method__list">
           <li>
-            <strong>Elige qué aprender</strong>: algo concreto que quieras dominar, por ejemplo una
-            parte difícil de una pieza de piano o un texto que estés memorizando.
+            <strong>Elige qué memorizar</strong>: algo concreto — un texto, un discurso, vocabulario,
+            una secuencia, un fragmento musical, un temario. Da igual la materia; importa que sea
+            claro.
           </li>
           <li>
             <strong>Escoge tu modo</strong>: define cuántos pasos debes cumplir. Cuanto más te
             exijas, mejores resultados obtendrás.
           </li>
-          <li><strong>Racha</strong>: sólo avanzas si lo tocas o lo dices sin mirar.</li>
+          <li>
+            <strong>Racha</strong>: sólo avanzas si lo haces sin mirar (sin leer ni chequear).
+          </li>
           <li>
             <strong>Zona de riesgo</strong>: la segunda mitad. Si fallas ahí, se reinicia la racha y
             sumas {{ game.modeConfig().punishmentPenalty }}
