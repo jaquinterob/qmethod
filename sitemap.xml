@@ -6,6 +6,16 @@
     <priority>1</priority>
   </url>
   <url>
+    <loc>https://qmethod.jaquinterob.com/metodo</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qmethod.jaquinterob.com/guia</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://qmethod.jaquinterob.com/privacidad</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
